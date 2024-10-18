@@ -8,7 +8,8 @@
       <SectionFour />
       <SectionFive />
       <SectionSix />
-    <FooterSection />
+      <FooterSection />
+      <LoginPage />
    </div>
   </div>
 </template>
@@ -23,6 +24,8 @@ import FooterSection from './components/FooterSection.vue'
 import NavBar from './components/NavBar.vue'
 import SectionSix from './components/SectionSix.vue'
 import SectionFive from './components/SectionFive.vue'
+import LoginPage from './components/LoginPage.vue'
+
 
 export default {
   name: 'App',
@@ -34,7 +37,8 @@ export default {
     SectionFour,
     SectionFive,
     SectionSix,
-    FooterSection
+    FooterSection,
+    LoginPage
   }
 }
 </script>

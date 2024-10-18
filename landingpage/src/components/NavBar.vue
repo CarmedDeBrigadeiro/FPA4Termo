@@ -24,8 +24,8 @@
         </div>
 
         <div class="nav-actions">
-            <a href="#">Sign In</a>
-            <a href="#">Sign Up For Free</a>
+            <router-link to="/login" class="sign-in-link">Sign In</router-link> 
+            <router-link to="/signup" class="sign-up-link">Sign Up For Free</router-link>
         </div>
 
 
@@ -35,6 +35,7 @@
 <script>
 
 export default {
+
     data() {
         return {
             isDropdownOpen: false,
