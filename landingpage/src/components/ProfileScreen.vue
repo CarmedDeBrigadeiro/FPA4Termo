@@ -5,7 +5,7 @@
                 <p class="profilePic">PROFILE PICTURE</p>
                 <img src="profile-placeholder.png" alt="Profile Picture" class="profile-img" />
                 <div class="form-group">
-                    <section class="row">
+                    <section style="display: flex;">
                         <label for="profilePic" class="choosePhoto">
                             <img src="../assets/icons/add.svg" alt=""> Browse
                         </label>
@@ -185,7 +185,7 @@ export default {
 
 .image-section {
     display: flex;
-    width: 156px;
+    width: fit-content;
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
@@ -199,7 +199,7 @@ export default {
 }
 
 .form-section {
-    width: 50%;
+    width: 100%;
     padding: 20px;
 }
 
@@ -271,11 +271,11 @@ button:hover {
 }
 
 .row {
-    max-width: 80%;
+    max-width: 1000px;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 3%;
+    justify-content: space-between;
     align-self: stretch;
 }
 
