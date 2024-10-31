@@ -2,6 +2,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import LoginPage from '../components/LoginPage.vue'; 
 import NavBar from '../components/NavBar.vue';
+import ProfileScreen from '@/components/ProfileScreen.vue';
 
 const routes = [
   {
@@ -14,6 +15,11 @@ const routes = [
     name: 'LoginPage',
     component: LoginPage,
   },
+  {
+    path: '/profile',
+    name: 'ProfilePage',
+    component: ProfileScreen,
+  }
 ];
 
 const router = createRouter({

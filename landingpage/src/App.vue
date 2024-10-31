@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="container">
-      <NavBar />  
+      <!-- <NavBar />  
       <HeroSection />
       <SectionTwo />
       <SectionTree />
@@ -9,36 +9,39 @@
       <SectionFive />
       <SectionSix />
       <FooterSection />
-      <LoginPage />
+      <LoginPage /> -->
+      <ProfileScreen />
    </div>
   </div>
 </template>
 
 
 <script>
-import SectionTwo from './components/SectionTwo.vue'
-import SectionTree from './components/SectionTree.vue'
-import SectionFour from './components/SectionFour.vue'
-import HeroSection from './components/HeroSection.vue'
-import FooterSection from './components/FooterSection.vue'
-import NavBar from './components/NavBar.vue'
-import SectionSix from './components/SectionSix.vue'
-import SectionFive from './components/SectionFive.vue'
-import LoginPage from './components/LoginPage.vue'
+// import SectionTwo from './components/SectionTwo.vue'
+// import SectionTree from './components/SectionTree.vue'
+// import SectionFour from './components/SectionFour.vue'
+// import HeroSection from './components/HeroSection.vue'
+// import FooterSection from './components/FooterSection.vue'
+// import NavBar from './components/NavBar.vue'
+// import SectionSix from './components/SectionSix.vue'
+// import SectionFive from './components/SectionFive.vue'
+// import LoginPage from './components/LoginPage.vue'
+import ProfileScreen  from './components/ProfileScreen.vue'
 
 
 export default {
   name: 'App',
   components: {
-    NavBar,
-    HeroSection,
-    SectionTwo,
-    SectionTree,
-    SectionFour,
-    SectionFive,
-    SectionSix,
-    FooterSection,
-    LoginPage
+      // NavBar,
+      // HeroSection,
+      // SectionTwo,
+      // SectionTree,
+      // SectionFour,
+      // SectionFive,
+      // SectionSix,
+      // FooterSection,
+      // LoginPage,
+    ProfileScreen
   }
 }
 </script>
