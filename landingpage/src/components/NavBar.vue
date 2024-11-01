@@ -67,6 +67,11 @@ export default {
             padding: 10px 20px;
             background-color: #fff;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: fixed;
+             top: 0;
+            width: 100%;
+             z-index: 1000;
+
         }
 
         .dropdown{
@@ -119,6 +124,8 @@ export default {
         flex-shrink: 0;
         margin-left: 50px;
         }
+
+   
 
         .navbar .nav-links {
         color: var(--Black-black-500, #000);

@@ -45,44 +45,6 @@
   </div>
 </template> 
 
-<script>
-function startCountdown(duration) {
-  let remainingTime = duration; 
-
-  function updateTimer() {
-    const hoursElem = document.getElementById('hours');
-    const minutesElem = document.getElementById('minutes');
-    const secondsElem = document.getElementById('seconds');
-
-    const hours = Math.floor(remainingTime / 3600);
-    const minutes = Math.floor((remainingTime % 3600) / 60);
-    const seconds = Math.floor(remainingTime % 60);
-
-    hoursElem.textContent = String(hours).padStart(2, '0');
-    minutesElem.textContent = String(minutes).padStart(2, '0');
-    secondsElem.textContent = String(seconds).padStart(2, '0');
-
-    remainingTime--;
-
-    if (remainingTime < 0) {
-      clearInterval(timer);
-      hoursElem.textContent = '00';
-      minutesElem.textContent = '00';
-      secondsElem.textContent = '00';
-    }
-  }
-
-  const timer = setInterval(updateTimer, 1000);
-}
-
-window.onload = function() {
-  const durationInSeconds = 12 * 3600 + 25 * 60 + 45;
-  startCountdown(durationInSeconds);
-};
-
-
-</script>
-
 <style scoped>
 body {
   margin: 50px;

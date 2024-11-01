@@ -1,19 +1,26 @@
 
 import { createRouter, createWebHistory } from 'vue-router';
-import LoginPage from '../components/LoginPage.vue'; 
-import NavBar from '../components/NavBar.vue';
+import LoginPageView from '../views/LoginPageView.vue'; 
+import HomeView from '../views/HomeView.vue';
+import CadastroPage from '@/components/CadastroPage.vue';
 
 const routes = [
   {
+  path: '/signup',
+  name: 'CadastroPage',
+  component: CadastroPage
+  },
+  {
     path: '/',
-    name: 'NavBar',
-    component: NavBar,
+    name: 'Home',
+    component: HomeView,
   },
   {
     path: '/login',
     name: 'LoginPage',
-    component: LoginPage,
+    component: LoginPageView,
   },
+
 ];
 
 const router = createRouter({
