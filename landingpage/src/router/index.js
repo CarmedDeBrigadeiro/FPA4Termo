@@ -1,8 +1,14 @@
 
 import { createRouter, createWebHistory } from 'vue-router';
+
 import LoginPageView from '../views/LoginPageView.vue'; 
 import HomeView from '../views/HomeView.vue';
 import CadastroPage from '@/components/CadastroPage.vue';
+=======
+import LoginPage from '../components/LoginPage.vue'; 
+import NavBar from '../components/NavBar.vue';
+import ProfileScreen from '@/components/ProfileScreen.vue';
+
 
 const routes = [
   {
@@ -20,6 +26,11 @@ const routes = [
     name: 'LoginPage',
     component: LoginPageView,
   },
+  {
+    path: '/profile',
+    name: 'ProfilePage',
+    component: ProfileScreen,
+  }
 
 ];
 

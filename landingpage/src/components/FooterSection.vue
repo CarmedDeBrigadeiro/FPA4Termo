@@ -95,11 +95,11 @@
 }
 
 .mainTitle {
-    padding: 10px;
-    position: relative;
+    position: absolute;
     width: 204px;
     height: 39px;
-    top: -30px;;
+    left: 80px;
+    top: 80px;
 }
 
 .menuGrid {
