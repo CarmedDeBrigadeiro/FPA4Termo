@@ -67,6 +67,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -79,19 +81,42 @@ export default {
         gender: '',
         cpf: '',
         postalCode: '',
-        street: ''
-      }
+        street: '',
+        username: '',
+        password: '',
+        confirmPassword: ''
+      },
+      passwordError: ''
     };
   },
   methods: {
-    submitForm() {
-      console.log(this.form);
-      alert("Form submitted!");
+    validatePasswords() {
+      if (this.form.password !== this.form.confirmPassword) {
+        this.passwordError = "As senhas não coincidem.";
+        return false;
+      }
+      this.passwordError = '';
+      return true;
+    },
+    async handleSubmit() {
+      if (!this.validatePasswords()) {
+        return;
+      }
+
+      try {
+        const response = await axios.post('https://localhost:7125/swagger/index.html', this.form);
+        alert('Cadastro realizado com sucesso!');
+        console.log(response.data);
+      } catch (error) {
+        alert('Erro ao cadastrar');
+        console.error(error);
+      }
     }
   }
- 
 };
 </script>
+
+
 
 <style scoped>
 .container {
@@ -121,7 +146,7 @@ export default {
   margin-right: 500px;
   position: sticky;
   top: 0; 
-  margin-top: -500px;
+  margin-top: -200px;
   
 }
 
