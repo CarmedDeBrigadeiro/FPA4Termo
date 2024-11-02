@@ -89,10 +89,8 @@ export default {
     background: #f3f5f9;
     border-radius: 30px;
     position: relative;
-    box-sizing: border-box;
-    width: 1290px; 
-    height: 700px; 
-    padding: 40px; 
+    max-width: 87.5rem; 
+    min-height: 734px;
     margin: 0 auto;  
 }
 
