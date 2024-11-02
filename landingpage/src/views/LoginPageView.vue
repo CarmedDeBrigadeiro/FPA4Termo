@@ -1,16 +1,21 @@
 <template>
-  <div>
-    <div class="container">
-      <RouterView></RouterView>
-   </div>
-  </div>
-</template>
+    <div>
+      <div class="container">
+        <LoginPage />
+     </div>
+    </div>
+  </template>
 
 <script>
+import LoginPage from '../components/LoginPage.vue'
+
 
 export default {
   name: 'App',
- 
+  components: {
+    LoginPage,
+  }
+}
 </script>
 
 <style>
@@ -31,4 +36,4 @@ body {
 
 
 </style>
-
+  

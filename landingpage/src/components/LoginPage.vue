@@ -45,7 +45,7 @@ export default {
       console.log(`Email: ${this.email}, Password: ${this.password}`);
     }
   }
-};
+};  
 </script>
 
 <style scoped>
@@ -55,6 +55,11 @@ export default {
     height: 600px; 
     max-width: 600px; 
     border-radius: 20px;
+
+
+  float: left;
+  margin-right: 100px;
+   
 }
 
 
@@ -135,6 +140,8 @@ export default {
 .form-group {
   margin-bottom: 20px;
   text-align: left;
+  font-family: Inter;
+  color:#969696;
 }
 
 .form-group label {
@@ -172,6 +179,6 @@ export default {
 
 .register-text a {
   color: #007bff;
-  text-decoration: none;
+  
 }
 </style>

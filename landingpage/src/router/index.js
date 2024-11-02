@@ -1,25 +1,37 @@
 
 import { createRouter, createWebHistory } from 'vue-router';
+
+import LoginPageView from '../views/LoginPageView.vue'; 
+import HomeView from '../views/HomeView.vue';
+import CadastroPage from '@/components/CadastroPage.vue';
+=======
 import LoginPage from '../components/LoginPage.vue'; 
 import NavBar from '../components/NavBar.vue';
 import ProfileScreen from '@/components/ProfileScreen.vue';
 
+
 const routes = [
   {
+  path: '/signup',
+  name: 'CadastroPage',
+  component: CadastroPage
+  },
+  {
     path: '/',
-    name: 'NavBar',
-    component: NavBar,
+    name: 'Home',
+    component: HomeView,
   },
   {
     path: '/login',
     name: 'LoginPage',
-    component: LoginPage,
+    component: LoginPageView,
   },
   {
     path: '/profile',
     name: 'ProfilePage',
     component: ProfileScreen,
   }
+
 ];
 
 const router = createRouter({
