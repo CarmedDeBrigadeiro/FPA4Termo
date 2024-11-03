@@ -26,7 +26,7 @@
 
         <div class="nav-actions">
             <router-link to="/profile" class="sign-in-link">My Profile</router-link>
-            <router-link to="/home" class="sign-up-link">Logout</router-link>
+            <router-link to="/" class="sign-up-link">Logout</router-link>
         </div>
 
 
