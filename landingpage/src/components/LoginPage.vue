@@ -33,23 +33,50 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
       email: '',
-      password: ''
+      password: '',
+      loginError: '' 
     };
   },
   methods: {
-    submitLogin() {
-      console.log(`Email: ${this.email}, Password: ${this.password}`);
+    async submitLogin() {
+      
+      if (!this.email || !this.password) {
+        this.loginError = "Por favor, preencha todos os campos.";
+        return;
+      }
+
+   
+      try {
+        const response = await axios.post('https://localhost:7125/swagger/index.html', {
+          email: this.email,
+          password: this.password
+        });
+        
+        
+        alert('Login realizado com sucesso!');
+        console.log(response.data);
+
+       
+        this.email = '';
+        this.password = '';
+        this.loginError = '';
+
+      } catch (error) {
+        this.loginError = "Erro ao fazer login. Verifique suas credenciais.";
+        console.error(error);
+      }
     }
   }
-};  
+};
 </script>
 
-<style scoped>
-
+<style>
 .product-image{
     width: 860% !important; 
     height: 600px; 
@@ -181,4 +208,8 @@ export default {
   color: #007bff;
   
 }
+
+
 </style>
+
+

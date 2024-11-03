@@ -54,9 +54,9 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin: 0 auto;
   padding: 20px;
 }
+
 
 
 </style>

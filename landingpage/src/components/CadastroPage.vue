@@ -1,5 +1,3 @@
-
-Copiar código
 <template>
   <div class="container">
     <div class="image-section">
@@ -105,6 +103,8 @@ Copiar código
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -164,7 +164,6 @@ export default {
 };
 </script>
 
-
 <style scoped>
 .container {
   display: flex;
@@ -192,9 +191,8 @@ export default {
   float: left;
   margin-right: 500px;
   position: sticky;
-  top: 0;
-  margin-top: -500px;
-
+  top: 0; 
+  margin-top: -200px;
 }
 
 .image-section h2 {
@@ -215,7 +213,6 @@ h2 {
 
 .form-group {
   margin-bottom: 15px;
-
 }
 
 label {
@@ -258,32 +255,6 @@ select {
   line-height: 150%;
   font-weight: 700;
   position: relative;
-
-}
-
-.address-data {
-
-  color: #969696;
-  text-align: left;
-  font-family: "Inter-Bold", sans-serif;
-  font-size: 18px;
-  line-height: 150%;
-  font-weight: 700;
-  position: relative;
-  align-self: stretch;
-  margin-top: 20px;
-}
-
-.address-1 {
-  color: #969696;
-  text-align: left;
-  font-family: "Inter-Bold", sans-serif;
-  font-size: 18px;
-  line-height: 150%;
-  font-weight: 700;
-  position: relative;
-  align-self: stretch;
-
 }
 
 button {
@@ -322,5 +293,4 @@ button:hover {
   border-radius: 10px;
   border: 1px solid #000;
 }
-
 </style>
