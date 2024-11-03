@@ -1,15 +1,29 @@
-// src/services/apiService.js
 import axios from 'axios';
 
-const api = axios.create({
-  baseURL: 'https://sua-api.com/api', // Substitua pela URL base do seu backend
+// Configure a URL base para a API
+const apiClient = axios.create({
+  baseURL: 'http://localhost:5067/api',
+  headers: {
+    'Content-Type': 'application/json'
+  }
 });
 
-export default {
-  getUser(userId) {
-    return api.get(`/users/${userId}`);
-  },
-  updateUserProfile(userId, profileData) {
-    return api.put(`/users/${userId}`, profileData);
-  },
+export const getUsuarios = async () => {
+  try {
+    const response = await apiClient.get('/usuarios');
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao buscar usuários:', error);
+    throw error;
+  }
+};
+
+export const createUsuario = async (usuario) => {
+  try {
+    const response = await apiClient.post('/usuarios', usuario);
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao criar usuário:', error);
+    throw error;
+  }
 };

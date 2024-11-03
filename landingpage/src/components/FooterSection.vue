@@ -78,7 +78,7 @@
     border-radius: 30px;
     background-color: black;
     width: 100%;
-    max-width: 1400px;
+    max-width: 87.5rem; 
     min-height: 734px;
     height: auto;
     margin: 0 auto;

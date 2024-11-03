@@ -1,6 +1,7 @@
 
 import { createRouter, createWebHistory } from 'vue-router';
 
+import CadastroPage from '@/components/CadastroPage.vue';
 import LoginPageView from '../views/LoginPageView.vue'; 
 import HomeView from '../views/HomeView.vue';
 import CadastroPage from '@/components/CadastroPage.vue';
@@ -27,6 +28,11 @@ const routes = [
     path: '/profile',
     name: 'ProfilePage',
     component: ProfileScreen,
+  },
+  {
+    path: '/register',
+    name: 'CadastroPage',
+    component: CadastroPage
   }
 
 ];
