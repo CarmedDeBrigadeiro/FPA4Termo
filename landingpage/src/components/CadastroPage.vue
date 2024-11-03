@@ -98,6 +98,7 @@ export default {
         confirmPassword: ''
       },
       passwordError: '',
+      addresses: [],
     };
   },
   methods: {
@@ -122,11 +123,45 @@ export default {
         alert('Erro ao cadastrar: ' + (error.response ? error.response.data.message : error.message));
         console.error(error);
       }
-    }
+    },
+    addAddress() {
+      this.addresses.push({
+        postalCode: '',
+        street: '',
+        neighborhood: '',
+        addressType: 'residential',
+        city: '',
+        state: '',
+        number: '',
+        additionalInfo: '',
+      });
+    },
+    removeAddress(index) {
+      this.addresses.splice(index, 1);
+    },
+    async fetchAddressByPostalCode(address) {
+      const cep = address.postalCode.replace(/\D/g, '');
+      if (cep.length === 8) {
+        try {
+          const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+          const data = await response.json();
+          if (!data.erro) {
+            address.street = data.logradouro;
+            address.neighborhood = data.bairro;
+            address.city = data.localidade;
+            address.state = data.uf;
+          } else {
+            alert('Postal code not found');
+          }
+        } catch (error) {
+          alert('Error fetching postal code');
+        }
+      }
+    },
   },
 };
-
 </script>
+
 <style scoped>
 .container {
   display: flex;
