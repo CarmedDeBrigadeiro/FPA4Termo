@@ -72,7 +72,8 @@
 
 <style scoped>
 
-/* Estilos principais do container */
+
+
 .container {
     border-radius: 30px;
     background-color: black;
@@ -82,13 +83,17 @@
     height: auto;
     margin: 0 auto;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; 
+    
+
 }
 
 .content {
     padding: 50px;
 }
 
-/* Logo principal */
 .mainTitle {
     position: absolute;
     width: 204px;
@@ -96,7 +101,7 @@
     left: 80px;
     top: 80px;
 }
-/* Grid de menus */
+
 .menuGrid {
     display: flex;
     color: white;
@@ -136,7 +141,6 @@
     margin-right: 40px
 }
 
-/* Input do newsletter */
 
 .right-side p {
     color: #878787;
@@ -185,7 +189,6 @@
     cursor: pointer;
 }
 
-/* Segunda logo no footer */
 .secondLogo {
     margin-top: 30px;
     bottom: 0;
@@ -198,7 +201,6 @@
     position: relative;
 }
 
-/* Barra inferior do footer */
 .rectangleBar {
     background-color: black;
     color: #B0B0B0;

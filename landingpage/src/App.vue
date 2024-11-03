@@ -4,6 +4,7 @@
   </div>
 </template>
 
+
 <script>
 export default {
   name: 'App',
@@ -27,4 +28,3 @@ body {
 }
 
 </style>
-
