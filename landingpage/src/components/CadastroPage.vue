@@ -54,23 +54,47 @@
           </div>
         </div>
         
-        <div class="address-data">ADDRESS DATA</div>
-        <div class="form-group">
-          <label for="postalCode">Postal Code (ZIP Code)</label>
-          <input type="text" id="postalCode" v-model="form.postalCode" />
+        
+        <div v-for="(address, index) in addresses" :key="index" class="address-form">
+          <h2>Address Data</h2>
+          <div class="form-group">
+            <label for="postalCode">Postal Code (ZIP Code)</label>
+            <input type="text" v-model="address.postalCode" @blur="fetchAddressByPostalCode(address)" />
+          </div>
+          <div class="form-group">
+            <label for="street">Street</label>
+            <input type="text" v-model="address.street" />
+          </div>
+          <div class="form-group">
+            <label for="neighborhood">Neighborhood</label>
+            <input type="text" v-model="address.neighborhood" placeholder="Enter neighborhood" />
+          </div>
+          <div class="form-group">
+            <label for="addressType">Type of Address</label>
+            <select v-model="address.addressType">
+              <option value="residential">Residential</option>
+              <option value="commercial">Commercial</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="city">City</label>
+            <input type="text" v-model="address.city" placeholder="Enter city" />
+          </div>
+          <div class="form-group">
+            <label for="state">State</label>
+            <input type="text" v-model="address.state" placeholder="Enter state" />
+          </div>
+          <div class="form-group">
+            <label for="number">Number</label>
+            <input type="text" v-model="address.number" placeholder="Apartment/Suite" />
+          </div>
+          <div class="form-group">
+            <label for="additionalInfo">Additional Information</label>
+            <input type="text" v-model="address.additionalInfo" placeholder="Additional information" />
+          </div>
+          <button type="button" @click="removeAddress(index)">Remove Address</button>
         </div>
-        <div class="form-group">
-          <label for="street">Street</label>
-          <input type="text" id="street" v-model="form.street" />
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" v-model="form.password" required />
-        </div>
-        <div class="form-group">
-          <label for="confirmPassword">Confirm Password</label>
-          <input type="password" id="confirmPassword" v-model="form.confirmPassword" required />
-        </div>
+        <button type="button" @click="addAddress">Add Another Address</button>
         <button type="submit">Sign Up</button>
       </form>
     </div>
