@@ -8,7 +8,7 @@
       <h2 class="sign">Sign up</h2>
       <p class="sub">Sign up to listen to the best beats with GABINI Headset’s store!</p>
 
-      <form @submit.prevent="submitForm">
+      <form @submit.prevent="handleSubmit"> <!-- Alinhando o método aqui -->
         <div class="form-group">
           <p class="personal">PERSONAL DATA</p>
           <label for="profilePic">Profile Picture</label>
@@ -53,49 +53,24 @@
             <input type="text" id="cpf" v-model="form.cpf" @input="formatCPF" placeholder="000.000.000-00" />
           </div>
         </div>
-
-        <div class="address-data">ADRESS DATA</div>
-        <h2>Address Data</h2>
-        <div v-for="(address, index) in addresses" :key="index" class="address-form">
-          <div class="form-group">
-            <label for="postalCode">Postal Code (ZIP Code)</label>
-            <input type="text" v-model="address.postalCode" @blur="fetchAddressByPostalCode(address)" />
-          </div>
-          <div class="form-group">
-            <label for="street">Street</label>
-            <input type="text" v-model="address.street" />
-          </div>
-          <div class="form-group">
-            <label for="neighborhood">Neighborhood</label>
-            <input type="text" v-model="address.neighborhood" placeholder="Enter neighborhood" />
-          </div>
-          <div class="form-group">
-            <label for="addressType">Type of Address</label>
-            <select v-model="address.addressType">
-              <option value="residential">Residential</option>
-              <option value="commercial">Commercial</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="city">City</label>
-            <input type="text" v-model="address.city" placeholder="Enter city" />
-          </div>
-          <div class="form-group">
-            <label for="state">State</label>
-            <input type="text" v-model="address.state" placeholder="Enter state" />
-          </div>
-          <div class="form-group">
-            <label for="number">Number</label>
-            <input type="text" v-model="address.number" placeholder="Apartment/Suite" />
-          </div>
-          <div class="form-group">
-            <label for="additionalInfo">Additional Information</label>
-            <input type="text" v-model="address.additionalInfo" placeholder="Additional information" />
-          </div>
-          <button type="button" @click="removeAddress(index)">Remove Address</button>
+        
+        <div class="address-data">ADDRESS DATA</div>
+        <div class="form-group">
+          <label for="postalCode">Postal Code (ZIP Code)</label>
+          <input type="text" id="postalCode" v-model="form.postalCode" />
         </div>
-        <button type="button" @click="addAddress">Add Another Address</button>
-
+        <div class="form-group">
+          <label for="street">Street</label>
+          <input type="text" id="street" v-model="form.street" />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" v-model="form.password" required />
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input type="password" id="confirmPassword" v-model="form.confirmPassword" required />
+        </div>
         <button type="submit">Sign Up</button>
       </form>
     </div>
@@ -117,7 +92,12 @@ export default {
         dob: '',
         gender: '',
         cpf: '',
+        postalCode: '',
+        street: '',
+        password: '', 
+        confirmPassword: ''
       },
+      passwordError: '',
       addresses: [],
     };
   },
@@ -127,20 +107,20 @@ export default {
         this.passwordError = "As senhas não coincidem.";
         return false;
       }
-      this.passwordError = '';
-      return true;
+      this.passwordError = ''; 
+      return true; 
     },
     async handleSubmit() {
       if (!this.validatePasswords()) {
-        return;
+        return; 
       }
 
       try {
-        const response = await axios.post('https://localhost:7125/swagger/index.html', this.form);
+        const response = await axios.post('http://localhost:5067/api/Auth/register', this.form);
         alert('Cadastro realizado com sucesso!');
         console.log(response.data);
       } catch (error) {
-        alert('Erro ao cadastrar');
+        alert('Erro ao cadastrar: ' + (error.response ? error.response.data.message : error.message));
         console.error(error);
       }
     },
