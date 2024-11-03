@@ -159,40 +159,25 @@ export default {
     removeAddress(index) {
       this.addresses.splice(index, 1);
     },
-  },
-  async fetchAddressByPostalCode(address) {
-    const cep = address.postalCode.replace(/\D/g, '');
-    if (cep.length === 8) {
-      try {
-        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-        const data = await response.json();
-        if (!data.erro) {
-          address.street = data.logradouro;
-          address.neighborhood = data.bairro;
-          address.city = data.localidade;
-          address.state = data.uf;
-        } else {
-          alert('Postal code not found');
+    async fetchAddressByPostalCode(address) {
+      const cep = address.postalCode.replace(/\D/g, '');
+      if (cep.length === 8) {
+        try {
+          const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+          const data = await response.json();
+          if (!data.erro) {
+            address.street = data.logradouro;
+            address.neighborhood = data.bairro;
+            address.city = data.localidade;
+            address.state = data.uf;
+          } else {
+            alert('Postal code not found');
+          }
+        } catch (error) {
+          alert('Error fetching postal code');
         }
-      } catch (error) {
-        alert('Error fetching postal code');
       }
-    }
-  },
-  addAddress() {
-    this.addresses.push({
-      postalCode: '',
-      street: '',
-      neighborhood: '',
-      addressType: 'residential',
-      city: '',
-      state: '',
-      number: '',
-      additionalInfo: '',
-    });
-  },
-  removeAddress(index) {
-    this.addresses.splice(index, 1);
+    },
   },
 };
 </script>
