@@ -347,11 +347,8 @@ export default {
 
 .form-group {
     display: flex;
-    /* Torna cada grupo de formulários flexível */
     flex-direction: column;
-    /* Coloca label e input um abaixo do outro */
     justify-content: space-between;
-    /* Distribui o espaço igualmente */
     margin-bottom: 15px;
 }
 
@@ -369,7 +366,6 @@ label {
 input,
 select {
     width: 100%;
-    /* Garante que todos os inputs e selects ocupem 100% da largura de seus containers */
 }
 
 button:hover {
@@ -379,7 +375,6 @@ button:hover {
 .form-group-inline {
     display: flex;
     flex: 1;
-    /* Faz com que todos os itens ocupem a mesma largura */
     gap: 15px;
 }
 
@@ -534,7 +529,6 @@ p {
     font-style: normal;
     font-weight: 500;
     line-height: 24px;
-    /* 150% */
     letter-spacing: -0.16px;
 }
 
