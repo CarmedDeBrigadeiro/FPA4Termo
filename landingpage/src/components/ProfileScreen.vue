@@ -165,8 +165,8 @@ export default {
             arrowImg: require('@/assets/icons/seta.png'),
             arrowUp: require('@/assets/icons/seta.png'),
             user: {
-                name: 'John',
-                lastName: 'Doe'
+                name: '',
+                lastName: ''
             },
             profile: {
                 firstName: '',

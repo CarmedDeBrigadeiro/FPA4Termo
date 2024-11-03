@@ -25,7 +25,7 @@
 
         <div class="nav-actions">
             <router-link to="/login" class="sign-in-link">Sign In</router-link> 
-            <router-link to="/signup" class="sign-up-link">Sign Up For Free</router-link>
+            <router-link to="/register" class="sign-up-link">Sign Up For Free</router-link>
         </div>
 
 
