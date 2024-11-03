@@ -6,6 +6,8 @@ Gabini é um e-commerce voltado para a venda de fones de ouvido.
 
 ### Passo a Passo para Instalação do Projeto
 
+**Front-end:**
+
 1. **Clone o Repositório**:
    No VSCode, crie uma pasta e abra o terminal. Em seguida, execute:
 
@@ -34,6 +36,21 @@ Gabini é um e-commerce voltado para a venda de fones de ouvido.
    npm run serve
     ```
     O navegador será aberto e você redirecionado para http://localhost:3000 (ou a porta especificada no seu projeto) para visualizar o projeto. 
+
+
+**Back-end:**
+1. **Compile o projeto:**:  
+    Para compilar o projeto back-end, navegue até a pasta do projeto no terminal e execute:
+   ```bash
+   dotnet build
+    ```
+2. **Execute o projeto:**:  
+    Após a compilação, para iniciar o servidor do projeto, execute:
+   ```bash
+   dotnet run
+    ```
+
+
 
 **Link do trello:** https://trello.com/b/fqtVKNGA/capslockos 
 
