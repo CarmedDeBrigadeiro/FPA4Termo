@@ -3,12 +3,10 @@
     <div class="image-section">
       <img src="../assets/images/Card_3.png" alt="ASTRO A50 Wireless + Base Station" />
     </div>
-
     <div class="form-section">
       <h2 class="sign">Sign up</h2>
       <p class="sub">Sign up to listen to the best beats with GABINI Headset’s store!</p>
-
-      <form @submit.prevent="handleSubmit"> <!-- Alinhando o método aqui -->
+      <form @submit.prevent="handleSubmit">
         <div class="form-group">
           <p class="personal">PERSONAL DATA</p>
           <label for="profilePic">Profile Picture</label>
@@ -29,6 +27,15 @@
         <div class="form-group">
           <label for="email">Email</label>
           <input type="email" id="email" v-model="form.email" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" v-model="form.password" required />
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input type="password" id="confirmPassword" v-model="form.confirmPassword" required />
+          <span v-if="passwordError" style="color: red;">{{ passwordError }}</span>
         </div>
         <div class="form-group">
           <label for="phoneNumber">Phone Number</label>
@@ -53,9 +60,7 @@
             <input type="text" id="cpf" v-model="form.cpf" @input="formatCPF" placeholder="000.000.000-00" />
           </div>
         </div>
-        
-        
-        <div v-for="(address, index) in addresses" :key="index" class="address-form">
+        <div v-for="(address, index) in form.addresses" :key="index" class="address-form">
           <h2>Address Data</h2>
           <div class="form-group">
             <label for="postalCode">Postal Code (ZIP Code)</label>
@@ -116,56 +121,47 @@ export default {
         dob: '',
         gender: '',
         cpf: '',
-        postalCode: '',
-        street: '',
-        password: '', 
-        confirmPassword: ''
+        password: '',
+        confirmPassword: '',
+        addresses: [
+          {
+            postalCode: '',
+            street: '',
+            neighborhood: '',
+            addressType: 'residential',
+            city: '',
+            state: '',
+            number: '',
+            additionalInfo: ''
+          }
+        ]
       },
-      passwordError: '',
-      addresses: [],
+      passwordError: ''
     };
   },
   methods: {
     validatePasswords() {
       if (this.form.password !== this.form.confirmPassword) {
-        this.passwordError = "As senhas não coincidem.";
+        this.passwordError = 'As senhas não coincidem.';
         return false;
       }
       this.passwordError = ''; 
       return true; 
     },
-    async handleSubmit() {
-      if (!this.validatePasswords()) {
-        return; 
+    formatCPF() {
+      let value = this.form.cpf.replace(/\D/g, ''); 
+      if (value.length <= 3) {
+        value = value.replace(/(\d{3})(\d{1,})/, '$1.$2');
+      } else if (value.length <= 6) {
+        value = value.replace(/(\d{3})(\d{3})(\d{1,})/, '$1.$2.$3');
+      } else if (value.length <= 9) {
+        value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{1,})/, '$1.$2.$3-$4');
       }
-
-      try {
-        const response = await axios.post('http://localhost:5067/api/Auth/register', this.form);
-        alert('Cadastro realizado com sucesso!');
-        console.log(response.data);
-      } catch (error) {
-        alert('Erro ao cadastrar: ' + (error.response ? error.response.data.message : error.message));
-        console.error(error);
-      }
-    },
-    addAddress() {
-      this.addresses.push({
-        postalCode: '',
-        street: '',
-        neighborhood: '',
-        addressType: 'residential',
-        city: '',
-        state: '',
-        number: '',
-        additionalInfo: '',
-      });
-    },
-    removeAddress(index) {
-      this.addresses.splice(index, 1);
+      this.form.cpf = value; 
     },
     async fetchAddressByPostalCode(address) {
-      const cep = address.postalCode.replace(/\D/g, '');
-      if (cep.length === 8) {
+      const cep = address.postalCode.replace(/\D/g, ''); 
+      if (cep.length === 8) {  
         try {
           const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
           const data = await response.json();
@@ -175,16 +171,78 @@ export default {
             address.city = data.localidade;
             address.state = data.uf;
           } else {
-            alert('Postal code not found');
+            alert('Código postal não encontrado.');
           }
         } catch (error) {
-          alert('Error fetching postal code');
+          alert('Erro ao buscar o código postal.');
         }
       }
     },
-  },
+    addAddress() {
+      this.form.addresses.push({
+        postalCode: '',
+        street: '',
+        neighborhood: '',
+        addressType: 'residential',
+        city: '',
+        state: '',
+        number: '',
+        additionalInfo: ''
+      });
+    },
+    removeAddress(index) {
+      this.form.addresses.splice(index, 1);
+    },
+    async handleSubmit() {
+      if (!this.validatePasswords()) {
+        return; 
+      }
+
+      console.log('Dados enviados:', this.form); 
+
+      // Criando o objeto no formato esperado pela API
+      const userData = {
+        iD_Usuario: 0, // Defina 0 ou outro valor conforme necessário
+        nome: this.form.firstName,
+        sobrenome: this.form.lastName,
+        username: this.form.userName,
+        email: this.form.email,
+        senhaHash: this.form.password, // Enviando a senha como hash
+        data_Registro: new Date().toISOString(), // Gerando a data de registro no formato ISO
+        telefone: this.form.phoneNumber,
+        genero: this.form.gender,
+        cpf: this.form.cpf,
+        fotoUrl: '', // Enviar a URL da foto, se houver (caso contrário, enviar vazio)
+        enderecos: this.form.addresses.map(address => ({
+          iD_Endereco: 0, // Defina 0 ou outro valor conforme necessário
+          tipo_Endereco: address.addressType,
+          rua: address.street,
+          numero: address.number,
+          complemento: address.additionalInfo,
+          bairro: address.neighborhood,
+          cidade: address.city,
+          estado: address.state,
+          cep: address.postalCode,
+          iD_Usuario: 0 // Defina 0 ou outro valor conforme necessário
+        }))
+      };
+
+      try {
+        const apiUrl = process.env.VUE_APP_API_BASE_URL || 'http://localhost:5067/api';
+        const response = await axios.post(`${apiUrl}/Auth/register`, userData); // Enviando o objeto formatado
+        alert('Cadastro realizado com sucesso!');
+        console.log(response.data);
+      } catch (error) {
+        alert('Erro ao cadastrar: ' + (error.response ? error.response.data.message : error.message));
+        console.error(error);
+      }
+    }
+  }
 };
 </script>
+
+
+
 
 <style scoped>
 .container {
