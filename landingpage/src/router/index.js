@@ -5,7 +5,7 @@ import CadastroPage from '@/components/CadastroPage.vue';
 import LoginPageView from '../views/LoginPageView.vue'; 
 import HomeView from '../views/HomeView.vue';
 import ProfileScreen from '@/components/ProfileScreen.vue';
-
+import ProductsPage from '@/components/ProductsPage.vue';
 
 const routes = [
   {
@@ -32,6 +32,11 @@ const routes = [
     path: '/register',
     name: 'CadastroPage',
     component: CadastroPage
+  },
+  {
+    path: '/products',
+    name: 'ProductsPage',
+    component: ProductsPage
   }
 
 ];
