@@ -105,18 +105,16 @@
           name: "",
           price: "",
         },
-        selectedProduct: null, // Produto selecionado para edição
-        productToDelete: null, // Produto selecionado para exclusão
+        selectedProduct: null,
+        productToDelete: null, 
       };
     },
     methods: {
-      // Função para editar o produto
       editProduct(product) {
         this.selectedProduct = product;
         this.editForm.name = product.name;
         this.editForm.price = product.price;
       },
-      // Salvar alterações no produto
       updateProduct() {
         if (this.selectedProduct) {
           this.selectedProduct.name = this.editForm.name;
@@ -124,22 +122,18 @@
           this.selectedProduct = null;
         }
       },
-      // Cancelar edição
       cancelEdit() {
         this.selectedProduct = null;
       },
-      // Confirmar exclusão
       confirmDelete(product) {
         this.productToDelete = product;
       },
-      // Executar exclusão
       deleteConfirmed() {
         if (this.productToDelete) {
           this.products = this.products.filter((p) => p !== this.productToDelete);
           this.productToDelete = null;
         }
       },
-      // Cancelar exclusão
       cancelDelete() {
         this.productToDelete = null;
       },
