@@ -9,8 +9,6 @@
       <SectionFive />
       <SectionSix />
       <FooterSection />
-      <ProductsPage/>
-
      </div>
     </div>
   </template>
@@ -25,7 +23,6 @@ import FooterSection from '../components/FooterSection.vue'
 import NavBar from '../components/NavBar.vue'
 import SectionSix from '../components/SectionSix.vue'
 import SectionFive from '../components/SectionFive.vue'
-import ProductsPage from '@/components/ProductsPage.vue'
 
 
 
@@ -39,7 +36,6 @@ export default {
     SectionFour,
     SectionFive,
     SectionSix,
-    ProductsPage,
     FooterSection
   }
 }

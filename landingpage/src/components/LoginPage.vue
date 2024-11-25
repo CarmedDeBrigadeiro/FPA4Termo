@@ -20,7 +20,10 @@
             <input type="password" id="password" v-model="password" required />
           </div>
 
-          <button type="submit" class="login-button">Sign in</button>
+          <router-link to="/products">
+
+            <button type="button" class="login-button">Sign in</button>
+          </router-link>
         </form>
 
         <p class="register-text">

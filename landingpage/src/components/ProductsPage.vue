@@ -1,145 +1,182 @@
 <template>
-    <div class="products-page">
-      <Navbar />
-  
-      <div class="products-container">
-        <h1>Products</h1>
-        <div class="filter-sort">
-          <label>Ordenar por:</label>
-          <select>
-            <option>Preço crescente</option>
-            <option>Preço decrescente</option>
-          </select>
-        </div>
-  
-        <table class="products-table">
-          <thead>
-            <tr>
-              <th>Image</th>
-              <th>Name</th>
-              <th>Price</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(product, index) in products" :key="index">
-              <td>
-                <img :src="product.image" alt="Product image" class="imagem-ferramenta" />
-              </td>
-              <td>{{ product.name }}</td>
-              <td>{{ product.price }}</td>
-              <td>
-                <img
-                  src="../assets/images/symbols_edit.png"
-                  alt="Edit"
-                  class="action-icon"
-                  @click="editProduct(product)"
-                />
-                <img
-                  src="../assets/images/symbols_delete.png"
-                  alt="Delete"
-                  class="action-icon"
-                  @click="confirmDelete(product)"
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
+  <div class="products-page">
+    <Navbar />
+
+    <div class="products-container">
+      <h1>Products</h1>
+      <div class="search-bar">
+        <input
+          id="search"
+          type="text"
+          v-model="searchQuery"
+          placeholder="Digite para buscar um produto"
+        />
       </div>
-  
-      <div class="modal-backdrop" v-if="selectedProduct">
-        <div class="modal-content">
-          <button class="close-btn" @click="cancelEdit">×</button>
-          <h2>Edit Product</h2>
-          <form @submit.prevent="updateProduct">
-            <div>
-              <label for="name">Name:</label>
-              <input id="name" v-model="editForm.name" />
-            </div>
-            <div>
-              <label for="price">Price:</label>
-              <input id="price" v-model="editForm.price" />
-            </div>
-            <div class="modal-actions">
-              <button type="button" class="cancel-btn" @click="cancelEdit">Cancel</button>
-              <button type="submit" class="save-btn">Save Changes</button>
-            </div>
-          </form>
-        </div>
-      </div>
-  
-      <div class="modal-backdrop" v-if="productToDelete">
-        <div class="modal-content">
-          <button class="close-btn" @click="cancelDelete">×</button>
-          <div class="modal-header">
-            <div class="modal-icon">!</div>
-            <h2>You’re about to delete a product!</h2>
+
+      <table class="products-table">
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(product, index) in filteredProducts" :key="index">
+            <td>
+              <img
+                :src="product.image"
+                alt="Product image"
+                class="imagem-ferramenta"
+              />
+            </td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.price }}</td>
+            <td>
+              <img
+                src="../assets/images/symbols_edit.png"
+                alt="Edit"
+                class="action-icon"
+                @click="editProduct(product)"
+              />
+              <img
+                src="../assets/images/symbols_delete.png"
+                alt="Delete"
+                class="action-icon"
+                @click="confirmDelete(product)"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="modal-backdrop" v-if="selectedProduct">
+
+      <div class="modal-content">
+        <button class="close-btn" @click="cancelEdit">×</button>
+        <h2>Edit Product</h2>
+        <form @submit.prevent="updateProduct">
+          <div>
+            <label for="name">Name:</label>
+            <input id="name" v-model="editForm.name" />
           </div>
-          <p>Are you sure you want to <strong>delete</strong> the product? This action cannot be undone.</p>
+          <div>
+            <label for="price">Price:</label>
+            <input id="price" v-model="editForm.price" />
+          </div>
           <div class="modal-actions">
-            <button @click="cancelDelete" class="cancel-btn">Cancel</button>
-            <button @click="deleteConfirmed" class="delete-btn">Delete product</button>
+            <button type="button" class="cancel-btn" @click="cancelEdit">
+              Cancel
+            </button>
+            <button type="submit" class="save-btn">Save Changes</button>
           </div>
+        </form>
+      </div>
+    </div>
+    <div class="modal-backdrop" v-if="productToDelete">
+      
+      <div class="modal-content">
+        <button class="close-btn" @click="cancelDelete">×</button>
+        <div class="modal-header">
+          <div class="modal-icon">!</div>
+          <h2>You’re about to delete a product!</h2>
+        </div>
+        <p>
+          Are you sure you want to <strong>delete</strong> the product? This
+          action cannot be undone.
+        </p>
+        <div class="modal-actions">
+          <button @click="cancelDelete" class="cancel-btn">Cancel</button>
+          <button @click="deleteConfirmed" class="delete-btn">
+            Delete product
+          </button>
         </div>
       </div>
     </div>
-  </template>
+  </div>
+</template>
+
   
   
   
 <script>
-  import Navbar from "../components/NavbarLogado.vue";
-  
-  export default {
-    components: {
-      Navbar,
-    },
-    data() {
-      return {
-        products: [
-          { image: require("@/assets/images/imga_ferramenta.png"), name: "Trena", price: "$65.00" },
-          { image: require("@/assets/images/imga_ferramenta.png"), name: "Trena Pequena", price: "$40.00" },
-          { image: require("@/assets/images/imga_ferramenta.png"), name: "Trena Especial", price: "$90.00" },
-        ],
-        editForm: {
-          name: "",
-          price: "",
+import Navbar from "../components/NavbarLogado.vue";
+
+export default {
+  components: {
+    Navbar,
+  },
+  data() {
+    return {
+      products: [
+        {
+          image: require("@/assets/images/imga_ferramenta.png"),
+          name: "Trena",
+          price: "$65.00",
         },
-        selectedProduct: null,
-        productToDelete: null, 
-      };
+        {
+          image: require("@/assets/images/imga_ferramenta.png"),
+          name: "Trena Pequena",
+          price: "$40.00",
+        },
+        {
+          image: require("@/assets/images/imga_ferramenta.png"),
+          name: "Trena Especial",
+          price: "$90.00",
+        },
+      ],
+      searchQuery: "", 
+      editForm: {
+        name: "",
+        price: "",
+      },
+      selectedProduct: null,
+      productToDelete: null,
+    };
+  },
+  computed: {
+    filteredProducts() {
+      return this.products.filter((product) =>
+        product.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
     },
-    methods: {
-      editProduct(product) {
-        this.selectedProduct = product;
-        this.editForm.name = product.name;
-        this.editForm.price = product.price;
-      },
-      updateProduct() {
-        if (this.selectedProduct) {
-          this.selectedProduct.name = this.editForm.name;
-          this.selectedProduct.price = this.editForm.price;
-          this.selectedProduct = null;
-        }
-      },
-      cancelEdit() {
+  },
+  methods: {
+    editProduct(product) {
+      this.selectedProduct = product;
+      this.editForm.name = product.name;
+      this.editForm.price = product.price;
+    },
+    updateProduct() {
+      if (this.selectedProduct) {
+        this.selectedProduct.name = this.editForm.name;
+        this.selectedProduct.price = this.editForm.price;
         this.selectedProduct = null;
-      },
-      confirmDelete(product) {
-        this.productToDelete = product;
-      },
-      deleteConfirmed() {
-        if (this.productToDelete) {
-          this.products = this.products.filter((p) => p !== this.productToDelete);
-          this.productToDelete = null;
-        }
-      },
-      cancelDelete() {
-        this.productToDelete = null;
-      },
+      }
     },
-  };
-  </script>
+    cancelEdit() {
+      this.selectedProduct = null;
+    },
+    confirmDelete(product) {
+      this.productToDelete = product;
+    },
+    deleteConfirmed() {
+      if (this.productToDelete) {
+        this.products = this.products.filter(
+          (p) => p !== this.productToDelete
+        );
+        this.productToDelete = null;
+      }
+    },
+    cancelDelete() {
+      this.productToDelete = null;
+    },
+  },
+};
+</script>
+
   
 
   
@@ -149,40 +186,51 @@
   }
   
   .products-container {
-    padding: 80px;
-  }
+  padding: 40px;
+  max-width: 1200px; 
+  margin: 0 auto; 
+}
   
   h1 {
     margin-bottom: 20px;
   }
   
-  .filter-sort {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .filter-sort label {
-    margin-right: 10px;
-  }
+  .search-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-bar label {
+  margin-right: 10px;
+}
+
+.search-bar input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 300px;
+}
   
   .products-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-  }
+  width: 100%; /* Ocupa toda a largura disponível */
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  table-layout: auto; /* Ajusta automaticamente o tamanho das colunas */
+}
   
-  .products-table th, .products-table td {
-    padding: 10px;
-    border: 1px solid #ddd;
-    text-align: left;
-  }
+.products-table th,
+.products-table td {
+  padding: 15px; /* Adiciona mais espaçamento para maior legibilidade */
+  border: 1px solid #ddd;
+  text-align: left;
+}
   
-  .imagem-ferramenta{
-    width: 100px;
-    height: 100px;
-    
-  }
+.imagem-ferramenta {
+  width: 120px; /* Aumenta o tamanho das imagens */
+  height: auto; /* Mantém a proporção da imagem */
+}
 
   
   .action-icon {
