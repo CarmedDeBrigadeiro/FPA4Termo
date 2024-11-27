@@ -3,12 +3,10 @@
     <div class="image-section">
       <img src="../assets/images/Card_3.png" alt="ASTRO A50 Wireless + Base Station" />
     </div>
-
     <div class="form-section">
       <h2 class="sign">Sign up</h2>
       <p class="sub">Sign up to listen to the best beats with GABINI Headset’s store!</p>
-
-      <form @submit.prevent="handleSubmit"> <!-- Alinhando o método aqui -->
+      <form @submit.prevent="handleSubmit">
         <div class="form-group">
           <p class="personal">PERSONAL DATA</p>
           <label for="profilePic">Profile Picture</label>
@@ -29,6 +27,15 @@
         <div class="form-group">
           <label for="email">Email</label>
           <input type="email" id="email" v-model="form.email" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" v-model="form.password" required />
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input type="password" id="confirmPassword" v-model="form.confirmPassword" required />
+          <span v-if="passwordError" style="color: red;">{{ passwordError }}</span>
         </div>
         <div class="form-group">
           <label for="phoneNumber">Phone Number</label>
@@ -53,9 +60,7 @@
             <input type="text" id="cpf" v-model="form.cpf" @input="formatCPF" placeholder="000.000.000-00" />
           </div>
         </div>
-        
-        
-        <div v-for="(address, index) in addresses" :key="index" class="address-form">
+        <div v-for="(address, index) in form.addresses" :key="index" class="address-form">
           <h2>Address Data</h2>
           <div class="form-group">
             <label for="postalCode">Postal Code (ZIP Code)</label>
@@ -100,7 +105,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import axios from 'axios';
 
@@ -116,40 +120,84 @@ export default {
         dob: '',
         gender: '',
         cpf: '',
-        postalCode: '',
-        street: '',
-        password: '', 
-        confirmPassword: ''
+        password: '',
+        confirmPassword: '',
+        addresses: [
+          {
+            postalCode: '',
+            street: '',
+            neighborhood: '',
+            addressType: 'residential',
+            city: '',
+            state: '',
+            number: '',
+            additionalInfo: ''
+          }
+        ]
       },
       passwordError: '',
-      addresses: [],
+      profilePic: null
     };
   },
   methods: {
+    // Valida se as senhas são iguais
     validatePasswords() {
       if (this.form.password !== this.form.confirmPassword) {
-        this.passwordError = "As senhas não coincidem.";
+        this.passwordError = 'As senhas não coincidem.';
         return false;
       }
       this.passwordError = ''; 
       return true; 
     },
-    async handleSubmit() {
-      if (!this.validatePasswords()) {
-        return; 
-      }
 
-      try {
-        const response = await axios.post('http://localhost:5067/api/Auth/register', this.form);
-        alert('Cadastro realizado com sucesso!');
-        console.log(response.data);
-      } catch (error) {
-        alert('Erro ao cadastrar: ' + (error.response ? error.response.data.message : error.message));
-        console.error(error);
+    // Formata o CPF para o padrão 'xxx.xxx.xxx-xx'
+    formatCPF() {
+      let value = this.form.cpf.replace(/\D/g, ''); 
+      if (value.length <= 3) {
+        value = value.replace(/(\d{3})(\d{1,})/, '$1.$2');
+      } else if (value.length <= 6) {
+        value = value.replace(/(\d{3})(\d{3})(\d{1,})/, '$1.$2.$3');
+      } else if (value.length <= 9) {
+        value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{1,})/, '$1.$2.$3-$4');
+      }
+      this.form.cpf = value; 
+    },
+
+    // Valida o CPF
+    validateCPF() {
+      const cpf = this.form.cpf.replace(/\D/g, '');
+      if (cpf.length !== 11) {
+        alert('CPF inválido!'); 
+        return false;
+      }
+      return true;
+    },
+
+    // Busca o endereço a partir do código postal (CEP)
+    async fetchAddressByPostalCode(address) {
+      const cep = address.postalCode.replace(/\D/g, ''); 
+      if (cep.length === 8) {  
+        try {
+          const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+          if (!response.data.erro) {
+            address.street = response.data.logradouro;
+            address.neighborhood = response.data.bairro;
+            address.city = response.data.localidade;
+            address.state = response.data.uf;
+          } else {
+            alert('Código postal não encontrado.');
+          }
+        } catch (error) {
+          alert('Erro ao buscar o código postal.');
+        }
+      } else {
+        alert('CEP inválido!');
       }
     },
+
+    // Adiciona um novo endereço
     addAddress() {
-      this.addresses.push({
+      this.form.addresses.push({
         postalCode: '',
         street: '',
         neighborhood: '',
@@ -157,35 +205,94 @@ export default {
         city: '',
         state: '',
         number: '',
-        additionalInfo: '',
+        additionalInfo: ''
       });
     },
+
+    // Remove um endereço
     removeAddress(index) {
-      this.addresses.splice(index, 1);
+      this.form.addresses.splice(index, 1);
     },
-    async fetchAddressByPostalCode(address) {
-      const cep = address.postalCode.replace(/\D/g, '');
-      if (cep.length === 8) {
-        try {
-          const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-          const data = await response.json();
-          if (!data.erro) {
-            address.street = data.logradouro;
-            address.neighborhood = data.bairro;
-            address.city = data.localidade;
-            address.state = data.uf;
-          } else {
-            alert('Postal code not found');
-          }
-        } catch (error) {
-          alert('Error fetching postal code');
+
+    // Envia os dados para o backend ao tentar registrar o usuário
+    async handleSubmit() {
+      if (!this.validatePasswords()) {
+        return; 
+      }
+      if (!this.validateCPF()) {
+        return;
+      }
+
+      const userData = {
+        iD_Usuario: 0,
+        nome: this.form.firstName,
+        sobrenome: this.form.lastName,
+        username: this.form.userName,
+        email: this.form.email,
+        senha: this.form.password,
+        data_Registro: new Date().toISOString(),
+        telefone: this.form.phoneNumber,
+        genero: this.form.gender,
+        cpf: this.form.cpf.replace(/\D/g, ''), // Envia apenas os números do CPF
+        fotoUrl: this.profilePic ? await this.uploadProfilePic() : '',
+        enderecos: this.form.addresses.map(address => ({
+          ID_Endereco: 0,
+          tipo_Endereco: address.addressType,
+          rua: address.street,
+          numero: address.number,
+          complemento: address.additionalInfo,
+          bairro: address.neighborhood,
+          cidade: address.city,
+          estado: address.state,
+          cep: address.postalCode.replace(/\D/g, ''), // Envia apenas os números do CEP
+          ID_Usuario: 0
+        }))
+      };
+      
+      try {
+        const apiUrl = process.env.VUE_APP_API_BASE_URL || 'http://localhost:5067/api';
+        const response = await axios.post(`${apiUrl}/Auth/register`, userData);
+
+        if (response.data && response.data.token) {
+          localStorage.setItem('authToken', response.data.token); 
+          this.$router.push('/'); 
+          alert('Cadastro realizado com sucesso!');
+        } else {
+          alert('Cadastro realizado.');
         }
+      } catch (error) {
+        console.error('Erro de requisição:', error.response ? error.response.data : error.message);
+        alert('Erro ao cadastrar: ' + (error.response ? error.response.data.message : error.message));
       }
     },
-  },
+
+    // Lida com o upload da foto de perfil
+    handleProfilePic(event) {
+      const file = event.target.files[0];
+      if (file) {
+        this.profilePic = file;
+      }
+    },
+
+    // Envia a foto de perfil para o backend (se necessário)
+    async uploadProfilePic() {
+      const formData = new FormData();
+      formData.append('file', this.profilePic);
+      try {
+        const response = await axios.post('http://localhost:5067/api/upload', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        return response.data.fileUrl; // A URL da imagem salva no servidor
+      } catch (error) {
+        console.error('Erro ao fazer upload da foto de perfil', error);
+        return '';
+      }
+    }
+  }
 };
 </script>
-
 <style scoped>
 .container {
   display: flex;

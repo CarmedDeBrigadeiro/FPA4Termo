@@ -3,5 +3,9 @@
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
     "@vue/cli-plugin-babel": "^5.0.8"
+  },
+  "dependencies": {
+    "@vitejs/plugin-vue": "^5.1.4",
+    "vite": "^5.4.10"
   }
 }
