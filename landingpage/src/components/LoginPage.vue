@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <div class="left-column">
-      <img class="product-image" src="../assets/images/Card_2.png" alt="Headset HyperX"  />
+      <img class="product-image" src="../assets/images/Card_2.png" alt="Headset HyperX" />
     </div>
 
     <div class="right-column">
@@ -27,6 +27,7 @@
           Don't have an account? 
           <router-link to="/register">Register here</router-link>
         </p>
+        <p v-if="loginError" class="error-message">{{ loginError }}</p>
       </div>
     </div>
   </div>
@@ -40,41 +41,56 @@ export default {
     return {
       email: '',
       password: '',
-      loginError: '' 
+      loginError: ''
     };
   },
   methods: {
     async submitLogin() {
-      
       if (!this.email || !this.password) {
         this.loginError = "Por favor, preencha todos os campos.";
         return;
       }
 
-   
       try {
-        const response = await axios.post('https://localhost:7125/swagger/index.html', {
+        const apiUrl = process.env.VUE_APP_API_BASE_URL || 'http://localhost:5067/api';
+
+        const response = await axios.post(`${apiUrl}/Auth/login`, {
           email: this.email,
-          password: this.password
+          senha: this.password
         });
-        
-        
-        alert('Login realizado com sucesso!');
-        console.log(response.data);
 
-       
-        this.email = '';
-        this.password = '';
-        this.loginError = '';
+        if (response.data.success) {
+          alert('Login realizado com sucesso!');
+          console.log(response.data);
 
-      } catch (error) {
-        this.loginError = "Erro ao fazer login. Verifique suas credenciais.";
-        console.error(error);
-      }
+          this.email = '';
+          this.password = '';
+          this.loginError = '';
+
+          this.$router.push('/home');
+        } else {
+          this.loginError = "Erro ao fazer login. Verifique suas credenciais.";
+        }
+      }catch (error) {
+        if (error.response) {
+          console.error("Erro da API:", error.response.data); 
+          if (error.response.status === 404) {
+            this.loginError = "Usuário não encontrado. Verifique suas credenciais.";
+          } else if (error.response.status === 400) {
+            this.loginError = "Requisição inválida. Verifique os dados informados.";
+          } else {
+            this.loginError = "Erro ao fazer login. Verifique suas credenciais.";
+          }
+        } else {
+          this.loginError = "Erro ao fazer login. Verifique suas credenciais.";
+        }
+}
     }
   }
 };
 </script>
+
+
 
 <style>
 .product-image{

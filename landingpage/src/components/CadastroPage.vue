@@ -105,7 +105,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import axios from 'axios';
 
@@ -136,10 +135,12 @@ export default {
           }
         ]
       },
-      passwordError: ''
+      passwordError: '',
+      profilePic: null
     };
   },
   methods: {
+    // Valida se as senhas são iguais
     validatePasswords() {
       if (this.form.password !== this.form.confirmPassword) {
         this.passwordError = 'As senhas não coincidem.';
@@ -148,6 +149,8 @@ export default {
       this.passwordError = ''; 
       return true; 
     },
+
+    // Formata o CPF para o padrão 'xxx.xxx.xxx-xx'
     formatCPF() {
       let value = this.form.cpf.replace(/\D/g, ''); 
       if (value.length <= 3) {
@@ -159,25 +162,40 @@ export default {
       }
       this.form.cpf = value; 
     },
+
+    // Valida o CPF
+    validateCPF() {
+      const cpf = this.form.cpf.replace(/\D/g, '');
+      if (cpf.length !== 11) {
+        alert('CPF inválido!'); 
+        return false;
+      }
+      return true;
+    },
+
+    // Busca o endereço a partir do código postal (CEP)
     async fetchAddressByPostalCode(address) {
       const cep = address.postalCode.replace(/\D/g, ''); 
       if (cep.length === 8) {  
         try {
-          const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-          const data = await response.json();
-          if (!data.erro) {
-            address.street = data.logradouro;
-            address.neighborhood = data.bairro;
-            address.city = data.localidade;
-            address.state = data.uf;
+          const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+          if (!response.data.erro) {
+            address.street = response.data.logradouro;
+            address.neighborhood = response.data.bairro;
+            address.city = response.data.localidade;
+            address.state = response.data.uf;
           } else {
             alert('Código postal não encontrado.');
           }
         } catch (error) {
           alert('Erro ao buscar o código postal.');
         }
+      } else {
+        alert('CEP inválido!');
       }
     },
+
+    // Adiciona um novo endereço
     addAddress() {
       this.form.addresses.push({
         postalCode: '',
@@ -190,31 +208,35 @@ export default {
         additionalInfo: ''
       });
     },
+
+    // Remove um endereço
     removeAddress(index) {
       this.form.addresses.splice(index, 1);
     },
+
+    // Envia os dados para o backend ao tentar registrar o usuário
     async handleSubmit() {
       if (!this.validatePasswords()) {
         return; 
       }
+      if (!this.validateCPF()) {
+        return;
+      }
 
-      console.log('Dados enviados:', this.form); 
-
-      // Criando o objeto no formato esperado pela API
       const userData = {
-        iD_Usuario: 0, // Defina 0 ou outro valor conforme necessário
+        iD_Usuario: 0,
         nome: this.form.firstName,
         sobrenome: this.form.lastName,
         username: this.form.userName,
         email: this.form.email,
-        senhaHash: this.form.password, // Enviando a senha como hash
-        data_Registro: new Date().toISOString(), // Gerando a data de registro no formato ISO
+        senha: this.form.password,
+        data_Registro: new Date().toISOString(),
         telefone: this.form.phoneNumber,
         genero: this.form.gender,
-        cpf: this.form.cpf,
-        fotoUrl: '', // Enviar a URL da foto, se houver (caso contrário, enviar vazio)
+        cpf: this.form.cpf.replace(/\D/g, ''), // Envia apenas os números do CPF
+        fotoUrl: this.profilePic ? await this.uploadProfilePic() : '',
         enderecos: this.form.addresses.map(address => ({
-          iD_Endereco: 0, // Defina 0 ou outro valor conforme necessário
+          ID_Endereco: 0,
           tipo_Endereco: address.addressType,
           rua: address.street,
           numero: address.number,
@@ -222,28 +244,55 @@ export default {
           bairro: address.neighborhood,
           cidade: address.city,
           estado: address.state,
-          cep: address.postalCode,
-          iD_Usuario: 0 // Defina 0 ou outro valor conforme necessário
+          cep: address.postalCode.replace(/\D/g, ''), // Envia apenas os números do CEP
+          ID_Usuario: 0
         }))
       };
-
+      
       try {
         const apiUrl = process.env.VUE_APP_API_BASE_URL || 'http://localhost:5067/api';
-        const response = await axios.post(`${apiUrl}/Auth/register`, userData); // Enviando o objeto formatado
-        alert('Cadastro realizado com sucesso!');
-        console.log(response.data);
+        const response = await axios.post(`${apiUrl}/Auth/register`, userData);
+
+        if (response.data && response.data.token) {
+          localStorage.setItem('authToken', response.data.token); 
+          this.$router.push('/'); 
+          alert('Cadastro realizado com sucesso!');
+        } else {
+          alert('Cadastro realizado.');
+        }
       } catch (error) {
+        console.error('Erro de requisição:', error.response ? error.response.data : error.message);
         alert('Erro ao cadastrar: ' + (error.response ? error.response.data.message : error.message));
-        console.error(error);
+      }
+    },
+
+    // Lida com o upload da foto de perfil
+    handleProfilePic(event) {
+      const file = event.target.files[0];
+      if (file) {
+        this.profilePic = file;
+      }
+    },
+
+    // Envia a foto de perfil para o backend (se necessário)
+    async uploadProfilePic() {
+      const formData = new FormData();
+      formData.append('file', this.profilePic);
+      try {
+        const response = await axios.post('http://localhost:5067/api/upload', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        return response.data.fileUrl; // A URL da imagem salva no servidor
+      } catch (error) {
+        console.error('Erro ao fazer upload da foto de perfil', error);
+        return '';
       }
     }
   }
 };
 </script>
-
-
-
-
 <style scoped>
 .container {
   display: flex;
