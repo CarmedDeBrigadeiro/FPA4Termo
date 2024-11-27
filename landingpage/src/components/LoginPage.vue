@@ -21,7 +21,6 @@
           </div>
 
           <router-link to="/products">
-
             <button type="button" class="login-button">Sign in</button>
           </router-link>
         </form>

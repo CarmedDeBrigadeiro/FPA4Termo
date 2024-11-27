@@ -112,19 +112,19 @@ export default {
     return {
       products: [
         {
-          image: require("@/assets/images/imga_ferramenta.png"),
-          name: "Trena",
-          price: "$65.00",
+          image: require("@/assets/images/notebook1.png"),
+          name: "Notebook Sams",
+          price: "$6.500,00",
         },
         {
-          image: require("@/assets/images/imga_ferramenta.png"),
-          name: "Trena Pequena",
-          price: "$40.00",
+          image: require("@/assets/images/notebook2.png"),
+          name: "Notebook Pêra",
+          price: "$4.000,00",
         },
         {
-          image: require("@/assets/images/imga_ferramenta.png"),
-          name: "Trena Especial",
-          price: "$90.00",
+          image: require("@/assets/images/celularultra.png"),
+          name: "Celular Ultra",
+          price: "$9.000,00",
         },
       ],
       searchQuery: "", 
@@ -183,6 +183,7 @@ export default {
   <style scoped>
   .products-page {
     font-family: Arial, sans-serif;
+    width: 1300px;
   }
   
   .products-container {
